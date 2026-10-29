@@ -5,3 +5,4 @@ python-dotenv>=1.0
 # Optional: enables generative AI query interpretation when GEMINI_API_KEY is configured
 google-genai>=1.0
 gunicorn>=22.0
+psycopg[binary]>=3.2,<4.0

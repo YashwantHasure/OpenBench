@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block title %}{{ resource.name }}{% endblock %}
+{% block content %}
+<section class="detail-page"><a href="{{ url_for('index') }}" class="back-link">← Explore resources</a><div class="detail-grid">
+<div><div class="detail-visual visual-{{ resource.id % 6 }}"><span class="category-chip">{{ resource.category }}</span><span class="detail-symbol">◈</span><span class="visual-id">OPENBENCH / RESOURCE {{ '%03d'|format(resource.id) }}</span></div>
+<div class="detail-description"><span class="eyebrow">ABOUT THIS RESOURCE</span><h2>{{ resource.name }}</h2><p>{{ resource.description }}</p><div class="detail-meta"><span>⌖ {{ resource.location }}</span><span>◷ Listed {{ resource.created_at.strftime('%d %b %Y') }}</span></div></div>
+<div class="trust-panel"><div class="trust-heading"><span class="trust-icon">✓</span><div><h3>Resource Trust Passport</h3><p>Review the information before requesting access.</p></div></div><div class="trust-row"><span>Provider</span><strong>{{ resource.owner.name }}</strong></div><div class="trust-row"><span>Provider account</span><strong>{{ 'Verified demo account' if resource.owner.verified else 'Not independently verified' }}</strong></div><div class="trust-row"><span>Training requirement</span><strong>{{ 'Required' if resource.training_required else 'Not specified as required' }}</strong></div><div class="trust-row"><span>Usage conditions</span><strong>{{ resource.requirements }}</strong></div><p class="trust-disclaimer">This passport displays listing information. It is not a guarantee of physical condition, ownership, licensing or safety.</p></div>
+</div>
+<aside class="booking-panel"><span class="eyebrow">REQUEST ACCESS</span><div class="detail-price"><strong>₹{{ "%.0f"|format(resource.price) }}</strong><span>/ {{ resource.price_unit }}</span></div><p class="muted">The owner must review and approve your request.</p>
+{% if current_user and current_user.role == 'renter' %}
+<form method="post" action="{{ url_for('request_booking', resource_id=resource.id) }}" class="form-stack booking-form">
+<label>Start date and time<input type="datetime-local" name="start_at" required></label><label>End date and time<input type="datetime-local" name="end_at" required></label><label>Purpose of use<textarea name="purpose" rows="3" required placeholder="Tell the owner what you need it for"></textarea></label>
+{% if resource.training_required %}<label class="check-label"><input type="checkbox" name="training_confirmed" value="yes" required> I understand training is required and will coordinate with the owner before use.</label>{% endif %}
+<button class="btn btn-primary btn-large full-width" type="submit">Request booking ↗</button></form>
+{% elif not current_user %}<a class="btn btn-primary btn-large full-width" href="{{ url_for('login') }}">Log in to request</a>
+{% else %}<div class="notice-box">You are logged in as an owner. Switch to a renter account to request a booking.</div>{% endif %}
+{% if current_user and current_user.role == 'renter' %}<form method="post" action="{{ url_for('join_waitlist', resource_id=resource.id) }}" class="waitlist-form"><label>Can't find a suitable slot? Join the waitlist (optional note)<input name="note" maxlength="300" placeholder="Preferred dates or details"></label><button class="btn btn-outline full-width" type="submit">Join waitlist</button></form>{% endif %}
+<div class="booking-note">✓ No booking is confirmed until the owner approves it.</div>
+</aside></div></section>
+{% endblock %}

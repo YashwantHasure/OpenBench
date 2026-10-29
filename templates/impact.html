@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block title %}Community impact{% endblock %}
+{% block content %}
+<section class="dashboard-page">
+  <div class="dashboard-heading"><div><span class="eyebrow">SHARING, MEASURED</span><h1>Small shares. <span>Big impact.</span></h1><p>A transparent snapshot of the OpenBench demo network. Savings are indicative estimates, not audited financial outcomes.</p></div><a class="btn btn-primary" href="{{ url_for('index') }}#explore">Explore resources ↗</a></div>
+  <div class="impact-grid">
+    <article class="impact-card"><span>ACTIVE LISTINGS</span><strong>{{ total_resources }}</strong><p>Resources currently visible</p></article>
+    <article class="impact-card"><span>COMPLETED BOOKINGS</span><strong>{{ completed }}</strong><p>Returned and recorded</p></article>
+    <article class="impact-card"><span>IN USE / APPROVED</span><strong>{{ active }}</strong><p>Current approved or active bookings</p></article>
+    <article class="impact-card"><span>RECORDED BOOKING HOURS</span><strong>{{ hours }}</strong><p>Hours from completed bookings</p></article>
+  </div>
+  <section class="dashboard-section"><div class="section-heading compact"><div><span class="eyebrow">COMMUNITY INVENTORY</span><h2>Resources by category</h2></div></div>
+    {% if categories %}<div class="category-impact">{% for category,count in categories %}<div class="category-impact-row"><div><span>{{ category }}</span><strong>{{ count }}</strong></div><div class="impact-track"><span style="width: {{ (count / total_resources * 100) if total_resources else 0 }}%"></span></div></div>{% endfor %}</div>{% else %}<div class="empty-state small-empty"><h3>Be the first to share</h3><p>Category analytics appear once resources are listed.</p></div>{% endif %}
+  </section>
+  <p class="impact-disclaimer">Demo note: the displayed data comes from the local application database. Any monetary savings estimate requires a defensible comparison baseline and is not shown as verified impact.</p>
+</section>
+{% endblock %}

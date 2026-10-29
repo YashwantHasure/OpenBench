@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}OpenBench{% endblock %} · OpenBench</title>
+  <meta name="description" content="Discover and share underused resources through OpenBench.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+<header class="site-header">
+  <a class="brand" href="{{ url_for('index') }}"><span class="brand-mark">O</span><span>openbench<span class="brand-dot">.</span><small>SHARE MORE. OWN LESS.</small></span></a>
+  <nav class="nav-links">
+    <a href="{{ url_for('index') }}#explore">Explore</a>
+    <a href="{{ url_for('impact_dashboard') }}">Impact</a>
+    {% if current_user and current_user.role == 'admin' %}<a href="{{ url_for('admin_dashboard') }}">Admin</a>{% endif %}
+    {% if current_user %}<a href="{{ url_for('dashboard') }}">Dashboard</a>{% endif %}
+    {% if current_user and current_user.role == 'owner' %}<a href="{{ url_for('new_resource') }}" class="nav-list">+ List a resource</a>{% endif %}
+  </nav>
+  <div class="nav-account">
+    {% if current_user %}
+      <span class="user-pill"><span class="avatar">{{ current_user.name[:1]|upper }}</span><span class="hide-mobile">{{ current_user.name }}</span></span>
+      <form method="post" action="{{ url_for('logout') }}"><button class="btn btn-ghost btn-small" type="submit">Log out</button></form>
+    {% else %}
+      <a class="btn btn-ghost btn-small" href="{{ url_for('login') }}">Log in</a>
+      <a class="btn btn-primary btn-small" href="{{ url_for('register') }}">Get started <span>↗</span></a>
+    {% endif %}
+  </div>
+</header>
+<main>
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}<div class="flash-stack">{% for category, message in messages %}<div class="flash flash-{{ category }}">{{ message }}</div>{% endfor %}</div>{% endif %}
+  {% endwith %}
+  {% block content %}{% endblock %}
+</main>
+<footer class="site-footer"><a class="brand brand-footer" href="{{ url_for('index') }}"><span class="brand-mark">O</span><span>openbench<span class="brand-dot">.</span></span></a><p>Access what you need. Share what you have.</p><span>Hackathon prototype · Demo data</span></footer>
+<script src="{{ url_for('static', filename='js/app.js') }}"></script>
+{% block scripts %}{% endblock %}
+</body>
+</html>

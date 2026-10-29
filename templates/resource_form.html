@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block title %}List a resource{% endblock %}
+{% block content %}
+<section class="form-page"><a href="{{ url_for('dashboard') }}" class="back-link">← Back to dashboard</a><span class="eyebrow">GROW THE SHARED NETWORK</span><h1>List a <span>resource.</span></h1><p>Be clear about what you are sharing, where it is, and what someone needs to know before requesting it.</p>
+<form method="post" class="listing-form">
+<div class="form-two"><label>Resource name<input name="name" required placeholder="e.g. Farm tractor"></label><label>Category<select name="category" required>{% for category in categories %}<option>{{ category }}</option>{% endfor %}</select></label></div>
+<label>Description<textarea id="listing-description" name="description" required rows="4" placeholder="What is it suitable for? Include useful details."></textarea></label>
+<div class="assistant-box"><div><strong>✦ Listing assistant</strong><p>Get help making your description clearer. AI suggestions must be checked for accuracy.</p></div><button class="btn btn-outline" type="button" id="listing-assist">Improve description</button><p id="listing-assist-status" class="muted" aria-live="polite"></p><div id="listing-suggestion" class="listing-suggestion" hidden></div></div>
+<div class="form-two"><label>Location<input name="location" required placeholder="City, region"></label><label>Price<input type="number" name="price" min="0" step="0.01" required value="0"></label></div>
+<div class="form-two"><label>Price unit<select name="price_unit"><option value="hour">Per hour</option><option value="day" selected>Per day</option><option value="week">Per week</option><option value="use">Per use</option></select></label><label>Eligibility / usage conditions<input name="requirements" placeholder="e.g. trained operator required"></label></div>
+<label class="check-label"><input type="checkbox" name="training_required" value="yes"> This resource requires specific training or safe-operation confirmation.</label>
+<div class="form-actions"><button class="btn btn-primary btn-large" type="submit">Publish listing ↗</button><a class="btn btn-ghost btn-large" href="{{ url_for('dashboard') }}">Cancel</a></div>
+</form></section>
+{% endblock %}

@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block title %}Share resources, unlock possibilities{% endblock %}
+{% block content %}
+<section class="hero">
+  <div class="hero-copy">
+    <div class="eyebrow"><span class="eyebrow-line"></span> THE SHARED RESOURCE NETWORK</div>
+    <h1>Everything you need.<br><span>Without owning</span><br>everything.</h1>
+    <p class="hero-description">Discover useful resources around you, from farm machinery and tools to workspaces and equipment. Share more. Waste less.</p>
+    <div class="hero-actions"><a class="btn btn-primary btn-large" href="#explore">Explore resources <span>↗</span></a><a class="text-link" href="{{ url_for('register') }}">Have something to share? <span>→</span></a></div>
+    <div class="hero-proof"><div class="proof-avatars"><span>F</span><span>C</span><span>S</span><span>+</span></div><div><strong>One platform. Many possibilities.</strong><small>Built for people, communities and businesses.</small></div></div>
+  </div>
+  <div class="hero-art">
+    <div class="art-orbit orbit-one"></div><div class="art-orbit orbit-two"></div>
+    <div class="art-center"><div class="art-icon">↗</div><strong>Resources<br>in motion</strong><span>Shared. Used. Returned.</span></div>
+    <div class="float-card float-card-top"><span class="float-icon green">✳</span><span><strong>Made to be shared</strong><small>Unlock idle potential</small></span></div>
+    <div class="float-card float-card-bottom"><span class="float-icon orange">⌁</span><span><strong>Closer to what you need</strong><small>Discover resources nearby</small></span></div>
+    <div class="art-tag tag-one">AGRICULTURE</div><div class="art-tag tag-two">SPACES</div><div class="art-tag tag-three">EQUIPMENT</div>
+  </div>
+</section>
+<section class="stats-strip"><div><strong>01</strong><span>Discover resources</span></div><div><strong>02</strong><span>Request access</span></div><div><strong>03</strong><span>Share responsibly</span></div><div><strong>04</strong><span>Build trust</span></div></section>
+<section class="ai-band">
+  <div class="ai-symbol">✳</div><div class="ai-copy"><span class="eyebrow">INTRODUCING OPENBENCH AI</span><h2>Tell us what you need.<br><span>We'll help you find it.</span></h2><p>Describe a resource in your own words. OpenBench will search available listings and help you explore your options.</p></div>
+  <form id="ai-search-form" class="ai-search"><label for="ai-query">What are you looking for?</label><div class="ai-input-row"><input id="ai-query" name="query" placeholder="e.g. tractor near Dhule tomorrow" required><button class="btn btn-outline" type="button" id="voice-search" aria-label="Use voice search">🎙 Voice</button><button class="btn btn-dark" type="submit">Find matches ↗</button></div><small id="ai-message">AI-assisted search when configured; keyword search otherwise.</small><div id="ai-results" class="ai-results"></div></form>
+</section>
+<section id="explore" class="section resources-section">
+  <div class="section-heading"><div><span class="eyebrow">THE RESOURCE DIRECTORY</span><h2>Find your next <span>useful thing.</span></h2><p>Explore resources listed by owners and providers.</p></div><span class="count-chip">{{ resources|length }} listings</span></div>
+  <form class="filter-bar" method="get" action="{{ url_for('index') }}"><div class="search-field"><span>⌕</span><input name="q" value="{{ q }}" placeholder="Search resources or locations"></div><select name="category" aria-label="Filter category"><option value="">All categories</option>{% for category in categories %}<option value="{{ category }}" {% if selected_category == category %}selected{% endif %}>{{ category }}</option>{% endfor %}</select><button class="btn btn-dark" type="submit">Search</button></form>
+  {% if resources %}
+  <div class="resource-grid">
+    {% for resource in resources %}
+    <article class="resource-card">
+      <a class="resource-visual visual-{{ loop.index0 % 6 }}" href="{{ url_for('resource_detail', resource_id=resource.id) }}"><span class="category-chip">{{ resource.category }}</span><span class="resource-symbol">{% if resource.category == 'Agriculture' %}✳{% elif resource.category == 'Vehicles' %}↗{% elif 'Properties' in resource.category %}⌂{% elif 'Education' in resource.category %}⌘{% elif 'Construction' in resource.category %}⚒{% else %}◈{% endif %}</span><span class="visual-id">OB / {{ '%03d'|format(resource.id) }}</span></a>
+      <div class="resource-card-body"><div class="resource-location">⌖ {{ resource.location }}</div><h3><a href="{{ url_for('resource_detail', resource_id=resource.id) }}">{{ resource.name }}</a></h3><p>{{ resource.description|truncate(100) }}</p><div class="card-bottom"><div class="price"><strong>₹{{ "%.0f"|format(resource.price) }}</strong><span>/ {{ resource.price_unit }}</span></div><a class="circle-link" href="{{ url_for('resource_detail', resource_id=resource.id) }}" aria-label="View resource">↗</a></div></div>
+    </article>
+    {% endfor %}
+  </div>
+  {% else %}
+  <div class="empty-state"><div class="empty-icon">⌕</div><h3>No matching resources yet</h3><p>Try another category or search term.</p><a href="{{ url_for('index') }}" class="btn btn-outline">Clear filters</a></div>
+  {% endif %}
+</section>
+<section class="owner-cta"><div><span class="eyebrow">HAVE SOMETHING UNDERUSED?</span><h2>Someone out there<br><span>might need what you have.</span></h2><p>Turn idle resources into useful opportunities. List a resource and stay in control of every request.</p></div><a href="{{ url_for('register') }}" class="btn btn-primary btn-large">Start sharing ↗</a></section>
+{% endblock %}

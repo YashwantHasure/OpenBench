@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block title %}{{ 'Create your account' if mode == 'register' else 'Welcome back' }}{% endblock %}
+{% block content %}
+<section class="auth-layout"><div class="auth-story"><span class="eyebrow">WELCOME TO OPENBENCH</span><h1>{{ 'Make more possible.' if mode == 'register' else 'Good to have you back.' }}</h1><p>{{ 'Join a network built around access, trust and making better use of what we already have.' if mode == 'register' else 'Sign in to manage your resources, requests and shared journeys.' }}</p><div class="auth-note"><span>✳</span><div><strong>Share more. Own less.</strong><small>Resources are more valuable when they can be used.</small></div></div></div>
+<div class="auth-panel"><span class="eyebrow">{{ 'GET STARTED' if mode == 'register' else 'YOUR OPENBENCH ACCOUNT' }}</span><h2>{{ 'Create an account' if mode == 'register' else 'Log in' }}</h2><p>{{ 'A few details and you are ready to go.' if mode == 'register' else 'Enter your details to continue.' }}</p>
+<form method="post" class="form-stack">
+{% if mode == 'register' %}<label>Full name<input name="name" required autocomplete="name" placeholder="Your name"></label>{% endif %}
+<label>Email address<input type="email" name="email" required autocomplete="email" placeholder="you@example.com"></label>
+<label>Password<input type="password" name="password" required minlength="8" autocomplete="{{ 'new-password' if mode == 'register' else 'current-password' }}" placeholder="{{ 'At least 8 characters' if mode == 'register' else 'Your password' }}"></label>
+{% if mode == 'register' %}<label>I want to join as<select name="role"><option value="renter">Resource seeker / renter</option><option value="owner">Resource owner / provider</option></select></label>{% endif %}
+<button class="btn btn-primary btn-large full-width" type="submit">{{ 'Create account' if mode == 'register' else 'Log in' }} <span>↗</span></button></form>
+<div class="auth-switch">{% if mode == 'register' %}Already have an account? <a href="{{ url_for('login') }}">Log in</a>{% else %}New to OpenBench? <a href="{{ url_for('register') }}">Create an account</a>{% endif %}</div>
+{% if mode == 'login' %}<div class="demo-box"><strong>Demo accounts</strong><p>Owner: owner@openbench.demo / OwnerDemo123!</p><p>Renter: renter@openbench.demo / RenterDemo123!</p><small>For local evaluation only. Change or disable demo credentials before public deployment.</small></div>{% endif %}
+</div></section>
+{% endblock %}
